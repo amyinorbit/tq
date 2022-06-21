@@ -124,7 +124,7 @@ void get_tq(tq_t *tq) {
     char *path = tq_get_db_path(fs_current_dir());
     
     if(!path) {
-        term_error(tq_prog_name, 1, "unable to access file system");
+        term_error(tq_prog_name, 1, "no task queue in directory hierarchy");
     }
     
     switch(tq_init(tq, path)) {

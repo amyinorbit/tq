@@ -21,6 +21,7 @@ char *tq_get_db_path(const char *root) {
     free(db_path);
     
     char *parent = fs_parent(root);
+    if(!parent || !strlen(parent)) return NULL;
     char *path = tq_get_db_path(parent);
     free(parent);
     return path;
