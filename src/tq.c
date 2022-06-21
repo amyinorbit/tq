@@ -261,14 +261,35 @@ tq_task_t *tq_add_before(tq_t *tq, const char *desc, const char *node_id) {
     return task;
 }
 
+tq_task_t *tq_mark_done(tq_t *tq, const char *id) {
+    ASSERT(tq);
+    ASSERT(id);
+    
+    tq_task_t *task = avl_find(&tq->tasks, id, NULL);
+    if(!task || task->done) return NULL;
+    
+    list_remove(&tq->todo, task);
+    task->done = true;
+    list_insert_head(&tq->done, task);
+    return task;
+}
 
 void tq_print_task(tq_task_t *task, FILE *out) {
     ASSERT(task);
     ASSERT(out);
     
-    fprintf(out, " - [");
+    fprintf(out, "[");
     term_set_fg(out, TERM_BRIGHT_YELLOW);
     fprintf(out, "%-*s", TQ_ID_LEN, task->id);
     term_style_reset(out);
-    fprintf(out, "] %s\n", task->desc);
+    fprintf(out, "] %s", task->desc);
+    
+    if(task->done) {
+        fprintf(out, " [");
+        term_set_fg(out, TERM_BRIGHT_GREEN);
+        fprintf(out, "✔");
+        term_style_reset(out);
+        fprintf(out, "]");
+    }
+    fprintf(out, "\n");
 }

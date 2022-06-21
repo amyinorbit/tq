@@ -60,6 +60,8 @@ tq_task_t *tq_add_back(tq_t *tq, const char *desc);
 tq_task_t *tq_add_after(tq_t *tq, const char *desc, const char *node);
 tq_task_t *tq_add_before(tq_t *tq, const char *desc, const char *node);
 
+tq_task_t *tq_mark_done(tq_t *tq, const char *id);
+
 void tq_print_task(tq_task_t *task, FILE *out);
 
 #ifdef __cplusplus

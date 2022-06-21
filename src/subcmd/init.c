@@ -36,7 +36,7 @@ int subcmd_init(int argc, const char **argv) {
             return 0;
             
         case TERM_ARG_ERROR:
-            term_error(tq_prog_name, 1, "%s", args.error);
+            term_error(tq_prog_name, -1, "%s", args.error);
             return 1;
             
         case 'f':

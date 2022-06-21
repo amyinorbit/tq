@@ -21,14 +21,17 @@ static void print_list(const tq_t *tq, bool show_done) {
     printf("Todo:\n");
     term_style_reset(stdout);
     for(tq_task_t *task = list_head(&tq->todo); task; task = list_next(&tq->todo, task)) {
+        printf(" - ");
         tq_print_task(task, stdout);
     }
     
     if(!show_done) return;
     
+    term_set_bold(stdout, true);
     printf("Done:\n");
     term_style_reset(stdout);
     for(tq_task_t *task = list_head(&tq->done); task; task = list_next(&tq->done, task)) {
+        printf(" - ");
         tq_print_task(task, stdout);
     }
 }
