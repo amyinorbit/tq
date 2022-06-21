@@ -21,7 +21,7 @@
 extern "C" {
 #endif
 
-#define TQ_DB_NAME "tqlist.txt"
+#define TQ_DB_NAME ".tqlist.txt"
 #define TQ_ID_LEN (4)
 
 typedef struct tq_task_t {
