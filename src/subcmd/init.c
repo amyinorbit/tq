@@ -17,30 +17,22 @@ static const term_param_t params[] = {
     {'f', 0, "force", TERM_ARG_OPTION, "override existing task queue" },
     {'q', 0, "quiet", TERM_ARG_OPTION, "execute without printing messages" },
 };
-
-
-static void usage() {
-    const char *use = "init [--force] [--quiet]";
-    printf("tq init — create a new task queue or reinitialize an existing one\n\n");
-    term_print_usage(stdout, tq_prog_name, &use, 1);
-    puts("");
-    term_print_help(stdout, params, 1);
-}
+static const int num_params = 2;
 
 int subcmd_init(int argc, const char **argv) {
     bool force = false;
     bool quiet = false;
     
-    
     term_arg_parser_t args;
     term_arg_parser_init(&args, argc, argv);
     
-    term_arg_result_t arg = term_arg_parse(&args, params, 1);
+    term_arg_result_t arg = term_arg_parse(&args, params, num_params);
     
     while(arg.name != TERM_ARG_DONE) {
         switch(arg.name) {
         case TERM_ARG_HELP:
-            usage();
+            subcmd_use("init", "init [--force] [--quiet]", 
+                "create a new task queue or reinitialize an existing one", params, num_params);
             return 0;
             
         case TERM_ARG_ERROR:
@@ -54,16 +46,18 @@ int subcmd_init(int argc, const char **argv) {
             quiet = true;
             break;
         }
-        arg = term_arg_parse(&args, params, 1);
+        arg = term_arg_parse(&args, params, num_params);
     }
     
     char *path = fs_make_path(fs_current_dir(), TQ_DB_NAME, NULL);
     
     bool exists = fs_file_exists(path);
     if(exists && !force) {
-        term_error(tq_prog_name, 1,
+        term_error(tq_prog_name, 0,
             "a task queue alread exists at %s.\n"
             "  Use --force to re-initialize it.", path);
+        free(path);
+        return -1;
     }
     
     tq_t tq;

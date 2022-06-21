@@ -8,11 +8,60 @@
  *===--------------------------------------------------------------------------------------------===
 */
 #include "../cli.h"
+#include "../tq.h"
+#include <term/colors.h>
+
+static const term_param_t params[] = {
+    {'d', 0, "done", TERM_ARG_OPTION, "show tasks already marked as done" },
+};
+static const int num_params = 1;
+
+static void print_list(const tq_t *tq, bool show_done) {
+    term_set_bold(stdout, true);
+    printf("Todo:\n");
+    term_style_reset(stdout);
+    for(tq_task_t *task = list_head(&tq->todo); task; task = list_next(&tq->todo, task)) {
+        tq_print_task(task, stdout);
+    }
+    
+    if(!show_done) return;
+    
+    printf("Done:\n");
+    term_style_reset(stdout);
+    for(tq_task_t *task = list_head(&tq->done); task; task = list_next(&tq->done, task)) {
+        tq_print_task(task, stdout);
+    }
+}
 
 int subcmd_list(int argc, const char **argv) {
-    (void)argc;
-    (void)argv;
-    printf("%s list <args>\n", tq_prog_name);
+    bool show_done = false;
     
-    return 0;
+    term_arg_parser_t args;
+    term_arg_parser_init(&args, argc, argv);
+    
+    term_arg_result_t arg = term_arg_parse(&args, params, num_params);
+    
+    while(arg.name != TERM_ARG_DONE) {
+        switch(arg.name) {
+        case TERM_ARG_HELP:
+            subcmd_use("list", "list [--done]", 
+                "list tasks in a queue", params, num_params);
+            return 0;
+            
+        case TERM_ARG_ERROR:
+            term_error(tq_prog_name, 1, "%s", args.error);
+            return 1;
+            
+        case 'd':
+            show_done = true;
+            break;
+        }
+        arg = term_arg_parse(&args, params, num_params);
+    }
+    
+    tq_t tq;
+    get_tq(&tq);
+    print_list(&tq, show_done);
+    tq_fini(&tq);
+    return TQ_OK ? 0 : -1;
 }

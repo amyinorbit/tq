@@ -22,10 +22,11 @@ extern "C" {
 #endif
 
 #define TQ_DB_NAME "tqlist.txt"
+#define TQ_ID_LEN (4)
 
 typedef struct tq_task_t {
-    char        *id;
-    char        *name;
+    char        id[TQ_ID_LEN+1];
+    char        *desc;
     bool        done;
     
     avl_node_t  id_node;
@@ -54,10 +55,12 @@ tq_status_t tq_init(tq_t *tq, const char *path);
 void tq_fini(tq_t *tq);
 bool tq_write(const tq_t *tq);
 
-void tq_add(tq_t *tq, const char *name, unsigned at);
-void tq_add2(tq_t *tq, const char *name, const char *file);
-void tq_delete(tq_t *tq, const char *id);
-void tq_done(tq_t *tq, const char *id);
+tq_task_t *tq_add_front(tq_t *tq, const char *desc);
+tq_task_t *tq_add_back(tq_t *tq, const char *desc);
+tq_task_t *tq_add_after(tq_t *tq, const char *desc, const char *node);
+tq_task_t *tq_add_before(tq_t *tq, const char *desc, const char *node);
+
+void tq_print_task(tq_task_t *task, FILE *out);
 
 #ifdef __cplusplus
 }

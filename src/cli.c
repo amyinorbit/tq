@@ -119,3 +119,28 @@ int main(int argc, const char **argv) {
         }
     }
 }
+
+void get_tq(tq_t *tq) {
+    char *path = tq_get_db_path(fs_current_dir());
+    
+    if(!path) {
+        term_error(tq_prog_name, 1, "unable to access file system");
+    }
+    
+    switch(tq_init(tq, path)) {
+    case TQ_OK: break;
+    case TQ_ERROR_IO: term_error(tq_prog_name, 1, "unable to open task list at %s", path); break;
+    case TQ_ERROR_INVALID_DB: term_error(tq_prog_name, 1, "task list at %s corrupted", path); break;
+    }
+}
+
+
+void subcmd_use(
+    const char *cmd, const char *use, const char *summary,
+    const term_param_t *params, int param_count
+) {
+    printf(" %s %s – %s\n\n", tq_prog_name, cmd, summary);
+    term_print_usage(stdout, tq_prog_name, &use, 1);
+    puts("");
+    term_print_help(stdout, params, param_count);
+}
