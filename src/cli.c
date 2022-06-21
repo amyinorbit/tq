@@ -31,6 +31,10 @@ static const subcmd_t cmds[] = {
 
 const char *tq_prog_name = "tq";
 
+static const term_param_t params[] = {
+    {0, 0, "version", TERM_ARG_OPTION, "print version number"},
+};
+
 
 static void usage() {
     
@@ -52,7 +56,7 @@ static void usage() {
     }
     puts("");
     
-    term_print_help(stdout, NULL, 0);
+    term_print_help(stdout, params, 1);
 }
 
 static _Noreturn void version() {
@@ -95,7 +99,7 @@ int main(int argc, const char **argv) {
         term_arg_parser_t args;
         term_arg_parser_init(&args, argc, argv);
         
-        term_arg_result_t arg = term_arg_parse(&args, NULL, 0);
+        term_arg_result_t arg = term_arg_parse(&args, params, 1);
         
         while(arg.name != TERM_ARG_DONE) {
             switch(arg.name) {
@@ -111,7 +115,7 @@ int main(int argc, const char **argv) {
                 term_error(tq_prog_name, 1, "%s", args.error);
                 break;
             }
-            arg = term_arg_parse(&args, NULL, 0);
+            arg = term_arg_parse(&args, params, 1);
         }
     }
 }

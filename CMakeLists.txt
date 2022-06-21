@@ -6,13 +6,17 @@ add_subdirectory(lib/termutils)
 
 set(SRC
 	src/cli.c
+	src/tq.c
 	src/subcmd/add.c
 	src/subcmd/done.c
 	src/subcmd/init.c
 	src/subcmd/list.c
 )
+set(HDR
+	src/cli.h
+	src/tq.h)
 # set(HDR src/game.h src/memory.h src/set.h)
-set(ALL_SRC ${SRC})
+set(ALL_SRC ${SRC} ${HDR})
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 add_executable(${PROJECT_NAME} ${ALL_SRC})
