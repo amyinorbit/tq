@@ -32,7 +32,7 @@ static const subcmd_t cmds[] = {
 const char *tq_prog_name = "tq";
 
 static const term_param_t params[] = {
-    {0, 0, "version", TERM_ARG_OPTION, "print version number"},
+    {0, TERM_ARG_VERSION, "version", TERM_ARG_OPTION, "print version number"},
 };
 
 
