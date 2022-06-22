@@ -76,7 +76,10 @@ int subcmd_add(int argc, const char **argv) {
     }
     
     if(!desc) {
-        term_error(tq_prog_name, 1, "no task description provided");
+        term_error(tq_prog_name, 0, "no task description");
+        subcmd_use("add", "add [--last | --a <id> | --b <id>] <task>", 
+            "add a new task to a queue", params, num_params);
+        return -1;
     }
     
     char *path = tq_get_db_path(fs_current_dir());

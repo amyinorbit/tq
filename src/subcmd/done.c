@@ -41,7 +41,7 @@ int subcmd_done(int argc, const char **argv) {
     }
     
     if(!id) {
-        term_error(tq_prog_name, 0, "missing task id");
+        term_error(tq_prog_name, 0, "no task id");
         subcmd_use("done", "done <task id>", "mark a task as done", NULL, 0);
         return -1;
     }
